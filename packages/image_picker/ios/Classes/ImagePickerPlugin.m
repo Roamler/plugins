@@ -135,7 +135,7 @@ static const int SOURCE_GALLERY = 2;
   NSNumber *maxWidth = [_arguments objectForKey:@"maxWidth"];
   NSNumber *maxHeight = [_arguments objectForKey:@"maxHeight"];
   CGFloat quality = 1.0;
-  if ([_arguments objectForKey:@"quality"] != (id)[NSNull null]) quality = (CGFloat) [[_arguments objectForKey:@"quality"] flof];
+  if ([_arguments objectForKey:@"quality"] != (id)[NSNull null]) quality = (CGFloat) [[_arguments objectForKey:@"quality"] floatValue];
 
   if (maxWidth != (id)[NSNull null] || maxHeight != (id)[NSNull null]) {
     image = [self scaledImage:image maxWidth:maxWidth maxHeight:maxHeight];
