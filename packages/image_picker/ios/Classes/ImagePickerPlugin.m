@@ -134,12 +134,15 @@ static const int SOURCE_GALLERY = 2;
 
   NSNumber *maxWidth = [_arguments objectForKey:@"maxWidth"];
   NSNumber *maxHeight = [_arguments objectForKey:@"maxHeight"];
+  CGFloat quality = 1.0;
+  if ([_arguments objectForKey:@"quality"] != (id)[NSNull null]) quality = (CGFloat) [[_arguments objectForKey:@"quality"] flof];
 
   if (maxWidth != (id)[NSNull null] || maxHeight != (id)[NSNull null]) {
     image = [self scaledImage:image maxWidth:maxWidth maxHeight:maxHeight];
   }
+    
 
-  NSData *data = UIImageJPEGRepresentation(image, 1.0);
+    NSData *data = UIImageJPEGRepresentation(image, quality);
   NSString *tmpDirectory = NSTemporaryDirectory();
   NSString *guid = [[NSProcessInfo processInfo] globallyUniqueString];
   // TODO(jackson): Using the cache directory might be better than temporary

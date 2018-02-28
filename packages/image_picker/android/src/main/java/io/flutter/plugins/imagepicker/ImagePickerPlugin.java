@@ -139,13 +139,15 @@ public class ImagePickerPlugin implements MethodCallHandler, ActivityResultListe
     if (pendingResult != null) {
       Double maxWidth = methodCall.argument("maxWidth");
       Double maxHeight = methodCall.argument("maxHeight");
+      Double quality = methodCall.argument("quality") != null ? (Double) methodCall.argument("quality") : (Double) 100.0;
+
       boolean shouldScale = maxWidth != null || maxHeight != null;
 
       if (!shouldScale) {
         pendingResult.success(image.getPath());
       } else {
         try {
-          File imageFile = scaleImage(image, maxWidth, maxHeight);
+          File imageFile = scaleImage(image, maxWidth, maxHeight, quality.intValue());
           pendingResult.success(imageFile.getPath());
         } catch (IOException e) {
           throw new RuntimeException(e);
@@ -159,7 +161,7 @@ public class ImagePickerPlugin implements MethodCallHandler, ActivityResultListe
     }
   }
 
-  private File scaleImage(Image image, Double maxWidth, Double maxHeight) throws IOException {
+  private File scaleImage(Image image, Double maxWidth, Double maxHeight, int quality) throws IOException {
     Bitmap bmp = BitmapFactory.decodeFile(image.getPath());
     double originalWidth = bmp.getWidth() * 1.0;
     double originalHeight = bmp.getHeight() * 1.0;
@@ -201,7 +203,7 @@ public class ImagePickerPlugin implements MethodCallHandler, ActivityResultListe
 
     Bitmap scaledBmp = Bitmap.createScaledBitmap(bmp, width.intValue(), height.intValue(), false);
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-    scaledBmp.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+    scaledBmp.compress(Bitmap.CompressFormat.JPEG, quality, outputStream);
 
     String scaledCopyPath = image.getPath().replace(image.getName(), "scaled_" + image.getName());
     File imageFile = new File(scaledCopyPath);
